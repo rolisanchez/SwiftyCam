@@ -270,7 +270,7 @@ open class SwiftyCamViewController: UIViewController {
         previewLayer = PreviewView(frame: view.frame, videoGravity: videoGravity)
         previewLayer.center = view.center
         view.addSubview(previewLayer)
-        view.sendSubview(toBack: previewLayer)
+        view.sendSubviewToBack(previewLayer)
 
 		// Add Gesture Recognizers
 
@@ -846,9 +846,9 @@ open class SwiftyCamViewController: UIViewController {
 			alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"), style: .cancel, handler: nil))
 			alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"), style: .default, handler: { action in
 				if #available(iOS 10.0, *) {
-					UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
+					UIApplication.shared.openURL(URL(string: UIApplication.openSettingsURLString)!)
 				} else {
-					if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+					if let appSettings = URL(string: UIApplication.openSettingsURLString) {
 						UIApplication.shared.openURL(appSettings)
 					}
 				}
@@ -984,11 +984,21 @@ open class SwiftyCamViewController: UIViewController {
 
 		do{
             if #available(iOS 10.0, *) {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
-                                                                with: [.mixWithOthers, .allowBluetooth, .allowAirPlay, .allowBluetoothA2DP])
+                try AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .default, options: [.mixWithOthers, .allowBluetooth, .allowAirPlay, .allowBluetoothA2DP])
             } else {
-                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
-                                                                with: [.mixWithOthers, .allowBluetooth])
+                // Try one of the following solutions, or target just iOS 10 and aboxe
+                
+                // Enable only .mixWithOthers, .allowBluetooth, however setCategory is only for iOS 10 and above now
+//                try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord,
+//                                                                with: [.mixWithOthers, .allowBluetooth])
+                
+                // iOS 9 Workaround, try to make this work
+                // Set category with options (iOS 9+) setCategory(_:options:)
+//                AVAudioSession.sharedInstance().perform(NSSelectorFromString("setCategory:withOptions:error:"), with: AVAudioSession.Category.playback, with:  [.mixWithOthers, .allowBluetooth])
+                
+                // Set category without options (<= iOS 9) setCategory(_:)
+//                AVAudioSession.sharedInstance().perform(NSSelectorFromString("setCategory:error:"), with: AVAudioSession.Category.playback)
+            
             }
 			session.automaticallyConfiguresApplicationAudioSession = false
 		}
@@ -1059,9 +1069,9 @@ extension SwiftyCamViewController : AVCaptureFileOutputRecordingDelegate {
 
     public func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if let currentBackgroundRecordingID = backgroundRecordingID {
-            backgroundRecordingID = UIBackgroundTaskInvalid
+            backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
 
-            if currentBackgroundRecordingID != UIBackgroundTaskInvalid {
+            if currentBackgroundRecordingID != UIBackgroundTaskIdentifier.invalid {
                 UIApplication.shared.endBackgroundTask(currentBackgroundRecordingID)
             }
         }
