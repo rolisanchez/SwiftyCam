@@ -58,6 +58,7 @@ class ViewController: SwiftyCamViewController, SwiftyCamViewControllerDelegate {
 
 	func swiftyCam(_ swiftyCam: SwiftyCamViewController, didTake photo: UIImage) {
 		let newVC = PhotoViewController(image: photo)
+        newVC.modalPresentationStyle = .fullScreen
 		self.present(newVC, animated: true, completion: nil)
 	}
 
@@ -75,6 +76,7 @@ class ViewController: SwiftyCamViewController, SwiftyCamViewControllerDelegate {
 
 	func swiftyCam(_ swiftyCam: SwiftyCamViewController, didFinishProcessVideoAt url: URL) {
 		let newVC = VideoViewController(videoURL: url)
+        newVC.modalPresentationStyle = .fullScreen
 		self.present(newVC, animated: true, completion: nil)
 	}
 
@@ -153,9 +155,9 @@ extension ViewController {
     
     fileprivate func toggleFlashAnimation() {
         if flashEnabled == true {
-            flashButton.setImage(#imageLiteral(resourceName: "flash"), for: UIControlState())
+            flashButton.setImage(#imageLiteral(resourceName: "flash"), for: UIControl.State())
         } else {
-            flashButton.setImage(#imageLiteral(resourceName: "flashOutline"), for: UIControlState())
+            flashButton.setImage(#imageLiteral(resourceName: "flashOutline"), for: UIControl.State())
         }
     }
 }

@@ -45,7 +45,7 @@ class Orientation  {
         self.deviceOrientation = nil
     }
     
-    func getImageOrientation(forCamera: SwiftyCamViewController.CameraSelection) -> UIImageOrientation {
+    func getImageOrientation(forCamera: SwiftyCamViewController.CameraSelection) -> UIImage.Orientation {
         guard shouldUseDeviceOrientation, let deviceOrientation = self.deviceOrientation else { return forCamera == .rear ? .right : .leftMirrored }
         
         switch deviceOrientation {
@@ -63,14 +63,16 @@ class Orientation  {
     func getPreviewLayerOrientation() -> AVCaptureVideoOrientation {
         // Depends on layout orientation, not device orientation
         switch UIApplication.shared.statusBarOrientation {
-        case .portrait, .unknown:
-            return AVCaptureVideoOrientation.portrait
-        case .landscapeLeft:
-            return AVCaptureVideoOrientation.landscapeLeft
-        case .landscapeRight:
-            return AVCaptureVideoOrientation.landscapeRight
-        case .portraitUpsideDown:
-            return AVCaptureVideoOrientation.portraitUpsideDown
+            case .portrait, .unknown:
+                return AVCaptureVideoOrientation.portrait
+            case .landscapeLeft:
+                return AVCaptureVideoOrientation.landscapeLeft
+            case .landscapeRight:
+                return AVCaptureVideoOrientation.landscapeRight
+            case .portraitUpsideDown:
+                return AVCaptureVideoOrientation.portraitUpsideDown
+            @unknown default:
+                fatalError("Unknown case")
         }
     }
     

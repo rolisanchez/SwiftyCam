@@ -34,13 +34,13 @@ class PhotoViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.view.backgroundColor = UIColor.gray
+		self.view.backgroundColor = UIColor.black
 		let backgroundImageView = UIImageView(frame: view.frame)
-		backgroundImageView.contentMode = UIViewContentMode.scaleAspectFit
+        backgroundImageView.contentMode = UIView.ContentMode.scaleAspectFit
 		backgroundImageView.image = backgroundImage
 		view.addSubview(backgroundImageView)
-		let cancelButton = UIButton(frame: CGRect(x: 10.0, y: 10.0, width: 30.0, height: 30.0))
-		cancelButton.setImage(#imageLiteral(resourceName: "cancel"), for: UIControlState())
+		let cancelButton = UIButton(frame: CGRect(x: 20.0, y: 20.0, width: 30.0, height: 30.0))
+        cancelButton.setImage(#imageLiteral(resourceName: "cancel"), for: UIControl.State())
 		cancelButton.addTarget(self, action: #selector(cancel), for: .touchUpInside)
 		view.addSubview(cancelButton)
 	}
